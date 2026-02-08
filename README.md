@@ -1,8 +1,8 @@
 <div align="center">
 
-# WebGPU Studio
+<img src=".github/header.png" alt="WebGPU Studio" width="700" />
 
-**AI models running entirely in your browser, powered by WebGPU.**
+<br />
 
 No servers. No API keys. No data leaves your device.
 

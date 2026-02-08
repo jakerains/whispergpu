@@ -1,4 +1,4 @@
-export const APP_VERSION = "0.5.2";
+export const APP_VERSION = "0.5.3";
 
 export interface ChangelogEntry {
   version: string;
@@ -11,6 +11,15 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  {
+    version: "0.5.3",
+    date: "2026-02-08",
+    title: "README Header Image",
+    changes: [
+      { type: "added", text: "Geist Pixel header image for GitHub README" },
+      { type: "improved", text: "README uses rendered header with pixel font, GPU icon, and feature badges" },
+    ],
+  },
   {
     version: "0.5.2",
     date: "2026-02-08",
