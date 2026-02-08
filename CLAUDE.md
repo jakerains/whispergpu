@@ -85,7 +85,7 @@ Each WebGPU experiment's current tested status. Update this list as features are
 | `/music-generation` | MusicGen Text-to-Music | ❌ Broken | |
 | `/image-segmentation` | Segment Anything (SAM) | ⚠️ Partial | Sort of works, needs fixes |
 | `/semantic-search` | MiniLM Semantic Search | ⚠️ Partial | Needs work |
-| `/particle-simulator` | WebGPU Particle Simulator | ⚠️ Partial | Works but needs polish |
+| `/particle-simulator` | WebGPU Particle Simulator | ✅ Working | Redesigned |
 | `/depth-estimation` | Depth Anything V2 | ❌ Broken | |
 | `/text-to-speech` | TTS (LFM/OuteTTS/SpeechT5) | 🔘 Untested | OuteTTS v0.2 added |
 | `/lfm-audio` | LFM Audio Studio | 🔘 Untested | |

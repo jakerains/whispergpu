@@ -74,7 +74,7 @@ const NAV_CATEGORIES: NavCategory[] = [
     label: "GPU Compute",
     icon: Atom,
     items: [
-      { href: "/particle-simulator", label: "Particle Simulator", icon: Atom, status: "beta" },
+      { href: "/particle-simulator", label: "Particle Simulator", icon: Atom },
     ],
   },
 ];

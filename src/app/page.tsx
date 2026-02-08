@@ -389,7 +389,6 @@ export default function LandingPage() {
             description="Mesmerizing GPU-powered physics with 10k+ particles using compute shaders"
             icon={Atom}
             modelSize="No model"
-            status="experimental"
           />
         </CategorySection>
         </>}
