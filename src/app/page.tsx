@@ -15,6 +15,7 @@ import {
   Languages,
   Gpu,
   Zap,
+  Star,
 } from "lucide-react";
 import { useWebGPUSupport } from "@/hooks/useWebGPUSupport";
 import { CategorySection } from "@/components/CategorySection";
@@ -64,6 +65,34 @@ export default function LandingPage() {
             </div>
           )}
         </div>
+
+        {/* Featured */}
+        <CategorySection title="Featured" icon={Star}>
+          <FeatureCard
+            href="/speech-to-text"
+            title="Speech to Text"
+            description="Record or upload audio for real-time transcription with Whisper"
+            icon={Waves}
+            modelSize="39-244 MB"
+            isFeatured
+          />
+          <FeatureCard
+            href="/chat"
+            title="Chat"
+            description="Chat with local LLMs featuring streaming and thinking support"
+            icon={MessageSquare}
+            modelSize="570 MB-2.1 GB"
+            isFeatured
+          />
+          <FeatureCard
+            href="/object-detection"
+            title="Object Detection"
+            description="Real-time object detection with bounding boxes and labels"
+            icon={ScanSearch}
+            modelSize="29-166 MB"
+            isFeatured
+          />
+        </CategorySection>
 
         {/* Feature Grid by Category */}
         <CategorySection title="Speech & Audio" icon={Waves}>
