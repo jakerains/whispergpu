@@ -69,10 +69,10 @@ git clone https://github.com/jakerains/webgpustudio.git
 cd webgpustudio
 
 # Install dependencies
-npm install
+pnpm install
 
 # Start dev server
-npm run dev
+pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in Chrome.
