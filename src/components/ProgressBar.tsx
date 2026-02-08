@@ -22,13 +22,14 @@ export function ProgressBar({ items }: ProgressBarProps) {
       {items.map((item) => (
         <div
           key={item.file}
-          className="rounded-lg bg-white/5 border border-white/10 p-3"
+          className="rounded-xl p-3"
+          style={{ background: "var(--surface)", border: "1px solid var(--border-subtle)" }}
         >
           <div className="flex items-center justify-between mb-1.5">
-            <span className="text-xs text-gray-400 truncate max-w-[70%]">
+            <span className="text-xs truncate max-w-[70%]" style={{ color: "var(--muted)" }}>
               {item.file}
             </span>
-            <span className="text-xs text-gray-500">
+            <span className="text-xs" style={{ color: "var(--muted-light)" }}>
               {item.status === "done"
                 ? "Done"
                 : item.total > 0
@@ -36,10 +37,13 @@ export function ProgressBar({ items }: ProgressBarProps) {
                 : `${Math.round(item.progress)}%`}
             </span>
           </div>
-          <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
+          <div className="w-full h-1.5 rounded-full overflow-hidden" style={{ background: "var(--border-subtle)" }}>
             <div
-              className="h-full rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-500 transition-all duration-300"
-              style={{ width: `${Math.min(item.progress, 100)}%` }}
+              className="h-full rounded-full transition-all duration-300"
+              style={{
+                width: `${Math.min(item.progress, 100)}%`,
+                background: "linear-gradient(90deg, var(--accent), var(--accent-light))",
+              }}
             />
           </div>
         </div>

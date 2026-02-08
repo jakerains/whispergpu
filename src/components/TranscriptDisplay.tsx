@@ -39,21 +39,31 @@ export function TranscriptDisplay({ transcript, isTranscribing }: TranscriptDisp
   const hasContent = transcript && (transcript.text || transcript.chunks.length > 0);
 
   return (
-    <div className="rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 overflow-hidden">
-      <div className="flex items-center justify-between px-4 py-3 border-b border-white/10">
+    <div className="card overflow-hidden animate-fade-in-up" style={{ animationDelay: "0.3s" }}>
+      <div
+        className="flex items-center justify-between px-5 py-3"
+        style={{ borderBottom: "1px solid var(--card-border)" }}
+      >
         <div className="flex items-center gap-2">
-          <FileText className="w-4 h-4 text-gray-400" />
-          <h3 className="text-sm font-medium text-gray-300">Transcript</h3>
+          <FileText className="w-4 h-4" style={{ color: "var(--muted)" }} />
+          <h3 className="text-sm font-medium" style={{ color: "var(--foreground)" }}>
+            Transcript
+          </h3>
         </div>
         {hasContent && (
           <button
             onClick={handleCopy}
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-white/5 hover:bg-white/10 text-gray-400 hover:text-gray-300 transition-all border border-white/10"
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium transition-all"
+            style={{
+              background: copied ? "var(--success-bg)" : "var(--surface)",
+              color: copied ? "var(--success)" : "var(--muted)",
+              border: `1px solid ${copied ? "var(--success-border)" : "var(--border-subtle)"}`,
+            }}
           >
             {copied ? (
               <>
-                <Check className="w-3 h-3 text-emerald-400" />
-                <span className="text-emerald-400">Copied</span>
+                <Check className="w-3 h-3" />
+                <span>Copied</span>
               </>
             ) : (
               <>
@@ -67,32 +77,41 @@ export function TranscriptDisplay({ transcript, isTranscribing }: TranscriptDisp
 
       <div
         ref={scrollRef}
-        className="p-4 max-h-64 overflow-y-auto scrollbar-thin scrollbar-thumb-white/10"
+        className="p-5 max-h-64 overflow-y-auto scrollbar-thin"
       >
         {!hasContent && !isTranscribing && (
-          <p className="text-sm text-gray-500 text-center py-6">
+          <p className="text-sm text-center py-6" style={{ color: "var(--muted-light)" }}>
             Transcript will appear here after recording...
           </p>
         )}
 
         {isTranscribing && !hasContent && (
           <div className="flex items-center gap-2 py-6 justify-center">
-            <div className="w-4 h-4 border-2 border-amber-300/30 border-t-amber-300 rounded-full animate-spin" />
-            <span className="text-sm text-amber-300">Transcribing audio...</span>
+            <div
+              className="w-4 h-4 border-2 rounded-full animate-spin"
+              style={{ borderColor: "var(--warning-border)", borderTopColor: "var(--warning)" }}
+            />
+            <span className="text-sm" style={{ color: "var(--warning)" }}>Transcribing audio...</span>
           </div>
         )}
 
         {hasContent && transcript.chunks.length > 0 && (
-          <div className="space-y-2">
+          <div className="space-y-3">
             {transcript.chunks.map((chunk, index) => (
               <div key={index} className="flex gap-3">
-                <span className="text-xs text-violet-400/70 font-mono pt-0.5 shrink-0">
+                <span
+                  className="text-xs pt-0.5 shrink-0"
+                  style={{ fontFamily: "var(--font-mono)", color: "var(--accent-light)" }}
+                >
                   {formatTimestamp(chunk.timestamp[0])}
                 </span>
-                <p className="text-sm text-gray-200 leading-relaxed">
+                <p className="text-sm leading-relaxed" style={{ color: "var(--foreground)" }}>
                   {chunk.text}
                   {index === transcript.chunks.length - 1 && isTranscribing && (
-                    <span className="inline-block w-0.5 h-4 bg-violet-400 ml-0.5 animate-blink align-middle" />
+                    <span
+                      className="inline-block w-0.5 h-4 ml-0.5 animate-blink align-middle"
+                      style={{ background: "var(--accent)" }}
+                    />
                   )}
                 </p>
               </div>
@@ -101,10 +120,13 @@ export function TranscriptDisplay({ transcript, isTranscribing }: TranscriptDisp
         )}
 
         {hasContent && transcript.chunks.length === 0 && transcript.text && (
-          <p className="text-sm text-gray-200 leading-relaxed">
+          <p className="text-sm leading-relaxed" style={{ color: "var(--foreground)" }}>
             {transcript.text}
             {isTranscribing && (
-              <span className="inline-block w-0.5 h-4 bg-violet-400 ml-0.5 animate-blink align-middle" />
+              <span
+                className="inline-block w-0.5 h-4 ml-0.5 animate-blink align-middle"
+                style={{ background: "var(--accent)" }}
+              />
             )}
           </p>
         )}

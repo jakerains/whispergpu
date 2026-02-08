@@ -45,11 +45,16 @@ export function TranscriptionPanel({
     : "idle";
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       {/* Controls Card */}
-      <div className="rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 p-6">
+      <div className="card p-6 animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-lg font-semibold text-white">Transcription</h2>
+          <h2
+            className="text-base font-semibold"
+            style={{ fontFamily: "var(--font-display)", color: "var(--foreground)" }}
+          >
+            Transcription
+          </h2>
           <StatusIndicator status={currentStatus} />
         </div>
 
@@ -59,10 +64,16 @@ export function TranscriptionPanel({
             {/* Pulse rings when recording */}
             {isRecording && (
               <>
-                <div className="absolute inset-0 rounded-full bg-rose-500/20 animate-ping" />
                 <div
-                  className="absolute -inset-3 rounded-full border-2 border-rose-500/30"
-                  style={{ animation: "pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite" }}
+                  className="absolute inset-0 rounded-full animate-ping"
+                  style={{ background: "rgba(212, 91, 91, 0.15)" }}
+                />
+                <div
+                  className="absolute -inset-3 rounded-full"
+                  style={{
+                    border: "2px solid rgba(212, 91, 91, 0.25)",
+                    animation: "pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+                  }}
                 />
               </>
             )}
@@ -71,12 +82,21 @@ export function TranscriptionPanel({
               disabled={!isModelReady || isTranscribing}
               className={clsx(
                 "relative z-10 w-20 h-20 rounded-full flex items-center justify-center transition-all",
-                isRecording
-                  ? "bg-rose-500 hover:bg-rose-400 shadow-lg shadow-rose-500/30"
-                  : isModelReady && !isTranscribing
-                  ? "bg-violet-600 hover:bg-violet-500 shadow-lg shadow-violet-500/30 hover:scale-105"
-                  : "bg-gray-700 cursor-not-allowed opacity-50"
+                !isRecording && isModelReady && !isTranscribing && "hover:scale-105 active:scale-95",
+                (!isModelReady || isTranscribing) && !isRecording && "cursor-not-allowed opacity-40"
               )}
+              style={{
+                background: isRecording
+                  ? "var(--recording)"
+                  : isModelReady && !isTranscribing
+                  ? "var(--accent)"
+                  : "var(--muted-light)",
+                boxShadow: isRecording
+                  ? "0 4px 20px rgba(212, 91, 91, 0.35)"
+                  : isModelReady && !isTranscribing
+                  ? "0 4px 20px rgba(194, 114, 78, 0.35)"
+                  : "none",
+              }}
             >
               {isRecording ? (
                 <Square className="w-7 h-7 text-white" fill="white" />
@@ -88,31 +108,42 @@ export function TranscriptionPanel({
 
           {/* Duration */}
           {(isRecording || duration > 0) && (
-            <div className="flex items-center gap-1.5 text-sm text-gray-400">
+            <div className="flex items-center gap-1.5 text-sm" style={{ color: "var(--muted)" }}>
               <Clock className="w-3.5 h-3.5" />
-              <span className="font-mono">{formatDuration(duration)}</span>
+              <span style={{ fontFamily: "var(--font-mono)" }}>{formatDuration(duration)}</span>
             </div>
           )}
 
           {/* Helper text */}
           {!isModelReady && (
-            <p className="text-xs text-gray-500">Load the model first to start recording</p>
+            <p className="text-xs" style={{ color: "var(--muted-light)" }}>
+              Load the model first to start recording
+            </p>
           )}
           {isModelReady && !isRecording && !isTranscribing && (
-            <p className="text-xs text-gray-500">Click the mic to start recording</p>
+            <p className="text-xs" style={{ color: "var(--muted)" }}>
+              Click the mic to start recording
+            </p>
           )}
           {isRecording && (
-            <p className="text-xs text-rose-400">Recording... Click stop when done</p>
+            <p className="text-xs font-medium" style={{ color: "var(--recording)" }}>
+              Recording... Click stop when done
+            </p>
           )}
           {isTranscribing && (
-            <p className="text-xs text-amber-400">Processing your audio...</p>
+            <p className="text-xs font-medium" style={{ color: "var(--warning)" }}>
+              Processing your audio...
+            </p>
           )}
         </div>
 
         {/* Audio Error */}
         {audioError && (
-          <div className="mt-4 p-3 rounded-lg bg-red-500/10 border border-red-500/20">
-            <p className="text-sm text-red-300">{audioError}</p>
+          <div
+            className="mt-4 p-3 rounded-xl"
+            style={{ background: "var(--error-bg)", border: "1px solid var(--error-border)" }}
+          >
+            <p className="text-sm" style={{ color: "var(--error)" }}>{audioError}</p>
           </div>
         )}
 

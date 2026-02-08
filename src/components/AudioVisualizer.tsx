@@ -28,8 +28,8 @@ export function AudioVisualizer({ analyserNode, isRecording }: AudioVisualizerPr
           ctx.beginPath();
           ctx.moveTo(0, h / 2);
           ctx.lineTo(w, h / 2);
-          ctx.strokeStyle = "rgba(139, 92, 246, 0.3)";
-          ctx.lineWidth = 2;
+          ctx.strokeStyle = "rgba(194, 114, 78, 0.2)";
+          ctx.lineWidth = 1.5;
           ctx.stroke();
         }
       }
@@ -55,11 +55,11 @@ export function AudioVisualizer({ analyserNode, isRecording }: AudioVisualizerPr
 
       ctx.clearRect(0, 0, w, h);
 
-      // Gradient stroke
+      // Warm gradient stroke
       const gradient = ctx.createLinearGradient(0, 0, w, 0);
-      gradient.addColorStop(0, "rgba(139, 92, 246, 0.8)");
-      gradient.addColorStop(0.5, "rgba(236, 72, 153, 0.8)");
-      gradient.addColorStop(1, "rgba(139, 92, 246, 0.8)");
+      gradient.addColorStop(0, "rgba(194, 114, 78, 0.7)");
+      gradient.addColorStop(0.5, "rgba(196, 144, 58, 0.7)");
+      gradient.addColorStop(1, "rgba(194, 114, 78, 0.7)");
 
       ctx.beginPath();
       ctx.lineWidth = 2.5;
@@ -83,9 +83,9 @@ export function AudioVisualizer({ analyserNode, isRecording }: AudioVisualizerPr
       ctx.lineTo(w, h / 2);
       ctx.stroke();
 
-      // Glow effect
-      ctx.shadowBlur = 10;
-      ctx.shadowColor = "rgba(139, 92, 246, 0.5)";
+      // Warm glow effect
+      ctx.shadowBlur = 8;
+      ctx.shadowColor = "rgba(194, 114, 78, 0.4)";
       ctx.stroke();
       ctx.shadowBlur = 0;
 
@@ -102,7 +102,10 @@ export function AudioVisualizer({ analyserNode, isRecording }: AudioVisualizerPr
   }, [analyserNode, isRecording]);
 
   return (
-    <div className="w-full h-20 rounded-xl bg-white/5 border border-white/10 overflow-hidden">
+    <div
+      className="w-full h-20 rounded-xl overflow-hidden"
+      style={{ background: "var(--surface)", border: "1px solid var(--border-subtle)" }}
+    >
       <canvas
         ref={canvasRef}
         className="w-full h-full"

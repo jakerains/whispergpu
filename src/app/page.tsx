@@ -34,8 +34,11 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950">
-      <div className="max-w-2xl mx-auto px-4 py-12">
+    <main className="min-h-screen">
+      {/* Warm top accent bar */}
+      <div className="h-1 w-full" style={{ background: "linear-gradient(90deg, var(--accent) 0%, var(--warning) 50%, var(--accent-light) 100%)" }} />
+
+      <div className="max-w-2xl mx-auto px-5 py-10 sm:py-14">
         <Header
           isWebGPUSupported={isWebGPUSupported}
           isCheckingWebGPU={isCheckingWebGPU}
@@ -66,12 +69,15 @@ export default function Home() {
           onStopRecording={handleStopRecording}
         />
 
-        <footer className="mt-8 text-center">
-          <p className="text-xs text-gray-600">
-            Powered by{" "}
-            <span className="text-gray-500">Transformers.js</span> &{" "}
-            <span className="text-gray-500">Whisper</span> — All processing
-            happens locally in your browser
+        <footer className="mt-10 text-center">
+          <div className="inline-flex items-center gap-1.5 text-xs" style={{ color: "var(--muted)" }}>
+            <span>Powered by</span>
+            <span className="font-medium" style={{ color: "var(--foreground)" }}>Transformers.js</span>
+            <span>&</span>
+            <span className="font-medium" style={{ color: "var(--foreground)" }}>Whisper</span>
+          </div>
+          <p className="text-xs mt-1" style={{ color: "var(--muted-light)" }}>
+            All processing happens locally in your browser
           </p>
         </footer>
       </div>
