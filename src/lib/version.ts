@@ -1,4 +1,4 @@
-export const APP_VERSION = "0.5.3";
+export const APP_VERSION = "0.6.1";
 
 export interface ChangelogEntry {
   version: string;
@@ -11,6 +11,27 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  {
+    version: "0.6.1",
+    date: "2026-02-08",
+    title: "Open Graph & Social Previews",
+    changes: [
+      { type: "added", text: "Open Graph meta tags for rich link previews on social media, Slack, and Discord" },
+      { type: "added", text: "Twitter card with summary_large_image for full-width previews" },
+      { type: "added", text: "OG image screenshot of landing page at 1200x630" },
+    ],
+  },
+  {
+    version: "0.6.0",
+    date: "2026-02-08",
+    title: "LFM Audio Upgrade",
+    changes: [
+      { type: "improved", text: "Text-to-speech now defaults to LFM2.5 Audio with SpeechT5 fallback support" },
+      { type: "fixed", text: "SpeechT5 synthesis now provides explicit speaker embeddings for reliable output" },
+      { type: "added", text: "New LFM Audio Studio demo with ASR, TTS, and near-real-time interleaved mode" },
+      { type: "added", text: "LFM audio route is available in sidebar navigation and landing-page speech category" },
+    ],
+  },
   {
     version: "0.5.3",
     date: "2026-02-08",

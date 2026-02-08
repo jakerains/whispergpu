@@ -1,6 +1,6 @@
 {
   "name": "webgpu-claude",
-  "version": "0.5.3",
+  "version": "0.6.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -14,6 +14,7 @@
     "geist": "^1.7.0",
     "lucide-react": "^0.563.0",
     "next": "16.1.6",
+    "onnxruntime-web": "^1.22.0-dev.20250409-89f8206ba4",
     "react": "19.2.3",
     "react-dom": "19.2.3"
   },

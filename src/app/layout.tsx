@@ -28,10 +28,37 @@ const jetbrainsMono = JetBrains_Mono({
   weight: ["400", "500"],
 });
 
+const siteUrl = "https://webgpustudio.vercel.app";
+
 export const metadata: Metadata = {
   title: "WebGPU Studio — In-Browser AI",
   description:
-    "Speech-to-text, chat, background removal, object detection, depth estimation, and more — all powered by WebGPU, running entirely in your browser.",
+    "12 AI tools running entirely in your browser — speech-to-text, chat, background removal, object detection, image segmentation, and more. Powered by WebGPU. No servers, no API keys.",
+  metadataBase: new URL(siteUrl),
+  openGraph: {
+    title: "WebGPU Studio",
+    description:
+      "12 AI tools running entirely in your browser. No servers, no API keys, no data leaves your device. Powered by WebGPU.",
+    url: siteUrl,
+    siteName: "WebGPU Studio",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "WebGPU Studio — AI models running in your browser",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "WebGPU Studio — In-Browser AI",
+    description:
+      "12 AI tools running entirely in your browser. No servers, no API keys. Powered by WebGPU.",
+    images: ["/og-image.png"],
+  },
 };
 
 export default function RootLayout({
