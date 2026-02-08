@@ -35,9 +35,6 @@ export default function Home() {
 
   return (
     <main className="min-h-screen">
-      {/* Warm top accent bar */}
-      <div className="h-1 w-full" style={{ background: "linear-gradient(90deg, var(--accent) 0%, var(--warning) 50%, var(--accent-light) 100%)" }} />
-
       <div className="max-w-2xl mx-auto px-5 py-10 sm:py-14">
         <Header
           isWebGPUSupported={isWebGPUSupported}

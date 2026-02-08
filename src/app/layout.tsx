@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { DM_Sans, Bricolage_Grotesque, JetBrains_Mono } from "next/font/google";
+import { Navigation } from "@/components/Navigation";
 import "./globals.css";
 
 const dmSans = DM_Sans({
@@ -21,9 +22,9 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Whisper WebGPU — In-Browser Speech to Text",
+  title: "WebGPU Studio — In-Browser AI",
   description:
-    "Real-time speech-to-text powered by OpenAI Whisper, running entirely in your browser with WebGPU acceleration.",
+    "Speech-to-text and AI chat powered by WebGPU, running entirely in your browser.",
 };
 
 export default function RootLayout({
@@ -36,6 +37,7 @@ export default function RootLayout({
       <body
         className={`${dmSans.variable} ${bricolage.variable} ${jetbrainsMono.variable} antialiased bg-background text-foreground`}
       >
+        <Navigation />
         {children}
       </body>
     </html>

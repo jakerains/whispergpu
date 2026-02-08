@@ -1,9 +1,16 @@
 "use client";
 
-import type { TranscriberProgressItem } from "@/types/transcriber";
+interface ProgressItem {
+  file: string;
+  progress: number;
+  loaded: number;
+  total: number;
+  name?: string;
+  status?: string;
+}
 
 interface ProgressBarProps {
-  items: TranscriberProgressItem[];
+  items: ProgressItem[];
 }
 
 function formatBytes(bytes: number): string {
