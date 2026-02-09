@@ -288,9 +288,9 @@ export default function LandingPage() {
           <FeatureCard
             href="/text-to-speech"
             title="Text to Speech"
-            description="Convert text to natural-sounding speech with LFM2.5 Audio or OuteTTS"
+            description="Convert text to natural-sounding speech with Kokoro, Supertonic, LFM2.5, or OuteTTS"
             icon={Speech}
-            modelSize="125 MB-1.5 GB"
+            modelSize="92 MB-1.5 GB"
             status="experimental"
           />
         </CategorySection>
