@@ -292,6 +292,7 @@ export function useChatBot(): ChatBotState {
       type: "generate",
       messages: workerMessages,
       maxTokens: model.maxTokens,
+      generationConfig: model.generationConfig,
     });
   }, [input, isGenerating, messages, modelId]);
 

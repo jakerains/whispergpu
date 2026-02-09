@@ -81,7 +81,7 @@ self.addEventListener("message", async (event: MessageEvent) => {
   }
 
   if (type === "generate") {
-    const { messages, maxTokens } = event.data;
+    const { messages, maxTokens, generationConfig } = event.data;
     aborted = false;
 
     try {
@@ -119,15 +119,25 @@ self.addEventListener("message", async (event: MessageEvent) => {
         },
       });
 
-      // Generate with streaming
-      await model.generate({
+      // Merge per-model generation config with defaults
+      const doSample = generationConfig?.do_sample ?? true;
+      const genParams: Record<string, unknown> = {
         ...inputs,
         max_new_tokens: maxTokens,
-        do_sample: true,
-        temperature: 0.7,
-        top_p: 0.9,
+        do_sample: doSample,
         streamer,
-      });
+      };
+      // Only add sampling params when do_sample is true
+      if (doSample) {
+        genParams.temperature = generationConfig?.temperature ?? 0.7;
+        genParams.top_p = generationConfig?.top_p ?? 0.9;
+      }
+      if (generationConfig?.repetition_penalty) {
+        genParams.repetition_penalty = generationConfig.repetition_penalty;
+      }
+
+      // Generate with streaming
+      await model.generate(genParams);
 
       if (!aborted) {
         self.postMessage({

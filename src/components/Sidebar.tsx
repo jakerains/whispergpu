@@ -110,9 +110,9 @@ export function Sidebar() {
         <Link
           href="/"
           className="text-base font-bold tracking-tight"
-          style={{ fontFamily: "var(--font-display)", color: "var(--foreground)" }}
+          style={{ fontFamily: "var(--font-geist-pixel-square)", color: "var(--foreground)" }}
         >
-          WebGPU.Studio
+          Web<span className="font-extrabold" style={{ color: "var(--accent)" }}>GPU</span>.Studio
         </Link>
         <button
           onClick={() => setIsOpen(!isOpen)}
@@ -156,10 +156,10 @@ export function Sidebar() {
           <Link
             href="/"
             className="text-lg font-bold tracking-tight"
-            style={{ fontFamily: "var(--font-display)", color: "var(--foreground)" }}
+            style={{ fontFamily: "var(--font-geist-pixel-square)", color: "var(--foreground)" }}
             onClick={() => setIsOpen(false)}
           >
-            WebGPU.Studio
+            Web<span className="font-extrabold" style={{ color: "var(--accent)" }}>GPU</span>.Studio
           </Link>
           <p className="text-[11px] mt-0.5" style={{ color: "var(--muted-light)" }}>
             In-Browser AI Playground

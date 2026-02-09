@@ -1,11 +1,20 @@
+export interface ChatGenerationConfig {
+  do_sample?: boolean;
+  temperature?: number;
+  top_p?: number;
+  repetition_penalty?: number;
+}
+
 export interface ChatModelOption {
   id: string;
   label: string;
   size: string;
   description: string;
-  dtype: string;
+  dtype: string | Record<string, string>;
   maxTokens: number;
   systemPrompt?: string;
+  useProcessor?: boolean;
+  generationConfig?: ChatGenerationConfig;
 }
 
 export const CHAT_MODELS: ChatModelOption[] = [
