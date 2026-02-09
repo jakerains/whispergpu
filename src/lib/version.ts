@@ -1,4 +1,4 @@
-export const APP_VERSION = "0.9.2";
+export const APP_VERSION = "0.9.3";
 
 export interface ChangelogEntry {
   version: string;
@@ -11,6 +11,17 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  {
+    version: "0.9.3",
+    date: "2026-02-08",
+    title: "YOLOv10 & Grounding DINO Detection",
+    changes: [
+      { type: "added", text: "YOLOv10 Nano/Small/Medium models — fast, accurate COCO object detection" },
+      { type: "added", text: "Grounding DINO Tiny — open-vocabulary detection with custom text labels" },
+      { type: "added", text: "Search labels input for Grounding DINO — type any object to detect" },
+      { type: "improved", text: "Worker refactored for 3 pipeline types: standard, YOLOv10 (AutoModel), and zero-shot" },
+    ],
+  },
   {
     version: "0.9.2",
     date: "2026-02-08",

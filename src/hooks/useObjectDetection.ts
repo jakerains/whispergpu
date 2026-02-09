@@ -1,7 +1,10 @@
 "use client";
 
 import { useState, useRef, useCallback, useEffect } from "react";
-import { DEFAULT_DETECTION_MODEL_ID } from "@/lib/detection-constants";
+import {
+  DEFAULT_DETECTION_MODEL_ID,
+  DETECTION_MODELS,
+} from "@/lib/detection-constants";
 
 export interface DetectionBox {
   label: string;
@@ -28,7 +31,11 @@ interface UseObjectDetectionState {
   modelId: string;
   setModelId: (modelId: string) => void;
   loadModel: () => void;
-  detect: (imageDataUrl: string, threshold?: number) => void;
+  detect: (
+    imageDataUrl: string,
+    threshold?: number,
+    candidateLabels?: string
+  ) => void;
 }
 
 export function useObjectDetection(): UseObjectDetectionState {
@@ -128,11 +135,20 @@ export function useObjectDetection(): UseObjectDetectionState {
     setIsModelReady(false);
     setError(null);
     setProgressItems([]);
-    workerRef.current.postMessage({ type: "load", modelId });
+
+    // Look up pipelineType from model registry
+    const modelConfig = DETECTION_MODELS.find((m) => m.id === modelId);
+    const pipelineType = modelConfig?.pipelineType ?? "object-detection";
+
+    workerRef.current.postMessage({ type: "load", modelId, pipelineType });
   }, [modelId]);
 
   const detect = useCallback(
-    (imageDataUrl: string, threshold: number = 0.5) => {
+    (
+      imageDataUrl: string,
+      threshold: number = 0.5,
+      candidateLabels?: string
+    ) => {
       if (!workerRef.current) return;
       setIsDetecting(true);
       setError(null);
@@ -140,6 +156,7 @@ export function useObjectDetection(): UseObjectDetectionState {
         type: "detect",
         imageData: imageDataUrl,
         threshold,
+        candidateLabels,
       });
     },
     []
