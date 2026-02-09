@@ -325,14 +325,6 @@ export default function LandingPage() {
             modelSize="~301 MB"
             status="experimental"
           />
-          <FeatureCard
-            href="/vision-chat"
-            title="Vision Chat"
-            description="Upload images and ask questions about them with a vision-language model"
-            icon={Eye}
-            modelSize="~500 MB"
-            status="experimental"
-          />
         </CategorySection>
 
         <CategorySection title="Text & Language" icon={MessageSquare}>

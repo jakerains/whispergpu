@@ -51,8 +51,7 @@ const NAV_CATEGORIES: NavCategory[] = [
       { href: "/background-removal", label: "Background Removal", icon: Scissors },
       { href: "/object-detection", label: "Object Detection", icon: ScanSearch },
       { href: "/depth-estimation", label: "Depth Estimation", icon: Mountain },
-      { href: "/image-segmentation", label: "Image Segmentation", icon: Shapes, status: "beta" },
-      { href: "/vision-chat", label: "Vision Chat", icon: Eye, status: "beta" },
+      { href: "/image-segmentation", label: "Image Segmentation", icon: Shapes, status: "wip" },
     ],
   },
   {
