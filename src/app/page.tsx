@@ -4,13 +4,7 @@ import { useState, useEffect } from "react";
 import {
   Waves,
   MessageSquare,
-  Scissors,
   ScanSearch,
-  Atom,
-  Eye,
-  Mountain,
-  Speech,
-  Shapes,
   Gpu,
   Zap,
   Sparkles,
@@ -20,8 +14,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useWebGPUSupport } from "@/hooks/useWebGPUSupport";
-import { CategorySection } from "@/components/CategorySection";
-import { FeatureCard } from "@/components/FeatureCard";
 import { ChangelogModal } from "@/components/ChangelogModal";
 import { APP_VERSION } from "@/lib/version";
 
@@ -274,79 +266,6 @@ export default function LandingPage() {
             </div>
           </div>
         </section>}
-
-        {!isMobile && <>
-        {/* All Features by Category */}
-        <CategorySection title="Speech & Audio" icon={Waves}>
-          <FeatureCard
-            href="/speech-to-text"
-            title="Speech to Text"
-            description="Record or upload audio for real-time transcription with Whisper"
-            icon={Waves}
-            modelSize="39 MB-1.5 GB"
-          />
-          <FeatureCard
-            href="/text-to-speech"
-            title="Text to Speech"
-            description="Convert text to natural-sounding speech with Kokoro, Supertonic, LFM2.5, or OuteTTS"
-            icon={Speech}
-            modelSize="92 MB-1.5 GB"
-            status="experimental"
-          />
-        </CategorySection>
-
-        <CategorySection title="Vision & Image" icon={Eye}>
-          <FeatureCard
-            href="/background-removal"
-            title="Background Removal"
-            description="Instantly remove image backgrounds with RMBG"
-            icon={Scissors}
-            modelSize="44-200 MB"
-          />
-          <FeatureCard
-            href="/object-detection"
-            title="Object Detection"
-            description="Real-time object detection with bounding boxes and labels"
-            icon={ScanSearch}
-            modelSize="29-166 MB"
-          />
-          <FeatureCard
-            href="/depth-estimation"
-            title="Depth Estimation"
-            description="Generate depth maps from 2D images with Depth Anything V2"
-            icon={Mountain}
-            modelSize="~99 MB"
-          />
-          <FeatureCard
-            href="/image-segmentation"
-            title="Image Segmentation"
-            description="Click to segment objects with Meta's SAM3 — upload or use your camera"
-            icon={Shapes}
-            modelSize="~301 MB"
-            status="experimental"
-          />
-        </CategorySection>
-
-        <CategorySection title="Text & Language" icon={MessageSquare}>
-          <FeatureCard
-            href="/chat"
-            title="Chat"
-            description="Chat with local LLMs featuring streaming and thinking support"
-            icon={MessageSquare}
-            modelSize="570 MB-2.1 GB"
-          />
-        </CategorySection>
-
-        <CategorySection title="GPU Compute" icon={Atom}>
-          <FeatureCard
-            href="/particle-simulator"
-            title="Particle Simulator"
-            description="Mesmerizing GPU-powered physics with 10k+ particles using compute shaders"
-            icon={Atom}
-            modelSize="No model"
-          />
-        </CategorySection>
-        </>}
 
         {/* Footer */}
         <footer className="mt-8 flex flex-col items-center gap-4">
