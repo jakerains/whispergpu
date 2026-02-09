@@ -10,11 +10,7 @@ import {
   Eye,
   Mountain,
   Speech,
-  Radio,
-  Music,
-  Search,
   Shapes,
-  Languages,
   Gpu,
   Zap,
   Sparkles,
@@ -287,31 +283,15 @@ export default function LandingPage() {
             title="Speech to Text"
             description="Record or upload audio for real-time transcription with Whisper"
             icon={Waves}
-            modelSize="39-244 MB"
+            modelSize="39 MB-1.5 GB"
           />
           <FeatureCard
             href="/text-to-speech"
             title="Text to Speech"
-            description="Convert text to natural-sounding speech with LFM2.5 Audio or SpeechT5"
+            description="Convert text to natural-sounding speech with LFM2.5 Audio or OuteTTS"
             icon={Speech}
-            modelSize="150 MB-1.5 GB"
+            modelSize="125 MB-1.5 GB"
             status="experimental"
-          />
-          <FeatureCard
-            href="/lfm-audio"
-            title="LFM Audio Studio"
-            description="Unified ASR, TTS, and near-real-time interleaved voice conversation"
-            icon={Radio}
-            modelSize="~1.5 GB"
-            status="experimental"
-          />
-          <FeatureCard
-            href="/music-generation"
-            title="Music Generation"
-            description="Generate music from text prompts with Meta's MusicGen"
-            icon={Music}
-            modelSize="~1.5 GB"
-            status="broken"
           />
         </CategorySection>
 
@@ -335,8 +315,8 @@ export default function LandingPage() {
             title="Depth Estimation"
             description="Generate depth maps from 2D images with Depth Anything V2"
             icon={Mountain}
-            modelSize="~97 MB"
-            status="broken"
+            modelSize="~99 MB"
+            status="experimental"
           />
           <FeatureCard
             href="/image-segmentation"
@@ -363,22 +343,6 @@ export default function LandingPage() {
             description="Chat with local LLMs featuring streaming and thinking support"
             icon={MessageSquare}
             modelSize="570 MB-2.1 GB"
-          />
-          <FeatureCard
-            href="/translation"
-            title="Translation"
-            description="Translate between 200 languages with Meta's NLLB"
-            icon={Languages}
-            modelSize="~600 MB"
-            status="experimental"
-          />
-          <FeatureCard
-            href="/semantic-search"
-            title="Semantic Search"
-            description="Search documents by meaning, not just keywords"
-            icon={Search}
-            modelSize="~25 MB"
-            status="experimental"
           />
         </CategorySection>
 

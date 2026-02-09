@@ -1,7 +1,7 @@
 import { pipeline, env, RawImage } from "@huggingface/transformers";
 
 // Workers can't use path aliases — inline constants
-const DEFAULT_DEPTH_MODEL_ID = "depth-anything/Depth-Anything-V2-Small-hf";
+const DEFAULT_DEPTH_MODEL_ID = "onnx-community/depth-anything-v2-small";
 
 env.allowLocalModels = false;
 env.useBrowserCache = true;

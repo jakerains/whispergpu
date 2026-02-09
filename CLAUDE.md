@@ -14,7 +14,7 @@ No test framework is configured. Use `npm run build` as the primary correctness 
 
 ## Architecture
 
-WebGPU Studio is a Next.js 16 App Router app that runs ML models entirely in the browser via WebGPU. There are 12 feature routes plus a landing page, each following the same layered pattern:
+WebGPU Studio is a Next.js 16 App Router app that runs ML models entirely in the browser via WebGPU. There are 8 feature routes plus a landing page, each following the same layered pattern:
 
 ```
 Constants (model registry) → Web Worker (inference) → Hook (bridge) → Page (UI)
@@ -78,19 +78,15 @@ Each WebGPU experiment's current tested status. Update this list as features are
 
 | Route | Feature | Status | Notes |
 |---|---|---|---|
-| `/chat` | WebGPU Chat (LLMs) | ✅ Working | |
-| `/speech-to-text` | Whisper Speech-to-Text | ✅ Working | |
+| `/chat` | WebGPU Chat (LLMs) | ✅ Working | Qwen3, LFM 2.5, SmolLM3 |
+| `/speech-to-text` | Whisper Speech-to-Text | ✅ Working | Added Large V3 Turbo option |
 | `/background-removal` | RMBG Background Removal | ✅ Working | |
 | `/object-detection` | YOLOS/DETR Object Detection | ✅ Working | |
-| `/music-generation` | MusicGen Text-to-Music | ❌ Broken | |
-| `/image-segmentation` | Segment Anything (SAM) | ⚠️ Partial | Sort of works, needs fixes |
-| `/semantic-search` | MiniLM Semantic Search | ⚠️ Partial | Needs work |
-| `/particle-simulator` | WebGPU Particle Simulator | ✅ Working | Redesigned |
-| `/depth-estimation` | Depth Anything V2 | ❌ Broken | |
-| `/text-to-speech` | TTS (LFM/OuteTTS/SpeechT5) | 🔘 Untested | OuteTTS v0.2 added |
-| `/lfm-audio` | LFM Audio Studio | 🔘 Untested | |
+| `/depth-estimation` | Depth Anything V2 | 🔘 Untested | Fixed: now uses ONNX model |
+| `/image-segmentation` | Segment Anything (SAM3) | ⚠️ Partial | SAM3 only, SAM1 removed |
+| `/text-to-speech` | TTS (LFM/OuteTTS) | 🔘 Untested | SpeechT5 removed |
 | `/vision-chat` | SmolVLM Vision Chat | 🔘 Untested | |
-| `/translation` | NLLB-200 Translation | 🔘 Untested | |
+| `/particle-simulator` | WebGPU Particle Simulator | ✅ Working | Raw WGSL compute shaders |
 
 **Legend:** ✅ Working — ⚠️ Partial (needs fixes) — ❌ Broken — 🔘 Untested
 

@@ -28,14 +28,6 @@ export const TTS_MODELS: TTSModelOption[] = [
     supportsTts: true,
     voiceProfile: "male_1, female_1, or random",
   },
-  {
-    id: "Xenova/speecht5_tts",
-    label: "SpeechT5",
-    size: "~150 MB",
-    description: "Microsoft SpeechT5 text-to-speech",
-    supportsTts: true,
-    voiceProfile: "Default SpeechT5 speaker",
-  },
 ];
 
 export const OUTETTS_SPEAKERS = [
@@ -45,5 +37,3 @@ export const OUTETTS_SPEAKERS = [
 ] as const;
 
 export const DEFAULT_TTS_MODEL_ID = TTS_MODELS[0].id;
-export const SPEECHT5_SPEAKER_EMBEDDINGS_URL =
-  "https://huggingface.co/datasets/Xenova/transformers.js-docs/resolve/main/speaker_embeddings.bin";

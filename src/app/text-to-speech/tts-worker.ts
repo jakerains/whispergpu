@@ -1,19 +1,15 @@
-import { pipeline, env } from "@huggingface/transformers";
+import { env } from "@huggingface/transformers";
 import { AudioModel } from "../../lib/lfm/audio-model.js";
 
 // Constants inlined -- Web Workers don't resolve path aliases
 const DEFAULT_MODEL_ID = "LiquidAI/LFM2.5-Audio-1.5B-ONNX";
 const LFM_MODEL_ID = "LiquidAI/LFM2.5-Audio-1.5B-ONNX";
 const OUTETTS_MODEL_ID = "onnx-community/OuteTTS-0.2-500M";
-const SPEECHT5_SPEAKER_EMBEDDINGS_URL =
-  "https://huggingface.co/datasets/Xenova/transformers.js-docs/resolve/main/speaker_embeddings.bin";
 
 // Disable local model check - always download from HF Hub
 env.allowLocalModels = false;
 env.useBrowserCache = true;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let ttsPipeline: any = null;
 let lfmModel: AudioModel | null = null;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let outeTtsInterface: any = null;
@@ -25,7 +21,6 @@ function disposeCurrentModel() {
     lfmModel = null;
   }
 
-  ttsPipeline = null;
   outeTtsInterface = null;
   currentModelId = null;
 }
@@ -97,19 +92,6 @@ async function loadLfmModel(modelId: string) {
   currentModelId = modelId;
 }
 
-async function loadSpeecht5Model(
-  modelId: string,
-  progressCallback: (data: unknown) => void
-) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ttsPipeline = await (pipeline as any)("text-to-speech", modelId, {
-    device: "webgpu",
-    progress_callback: progressCallback,
-  });
-
-  currentModelId = modelId;
-}
-
 async function loadOuteTtsModel(modelId: string) {
   // Dynamic import — only load outetts when actually needed
   const { HFModelConfig_v1, InterfaceHF } = await import("outetts");
@@ -139,7 +121,7 @@ async function loadOuteTtsModel(modelId: string) {
 
 async function loadModel(
   modelId: string,
-  progressCallback: (data: unknown) => void
+  _progressCallback: (data: unknown) => void
 ) {
   // Reload if model changed
   if (currentModelId !== null && currentModelId !== modelId) {
@@ -160,7 +142,7 @@ async function loadModel(
     return;
   }
 
-  await loadSpeecht5Model(modelId, progressCallback);
+  throw new Error(`Unknown TTS model: ${modelId}`);
 }
 
 async function synthesizeWithLfm(text: string) {
@@ -225,30 +207,6 @@ async function synthesizeWithOuteTts(text: string, speakerId?: string) {
   );
 }
 
-async function synthesizeWithSpeecht5(text: string) {
-  if (!ttsPipeline) {
-    throw new Error("SpeechT5 model not loaded");
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const result = await (ttsPipeline as any)(text, {
-    speaker_embeddings: SPEECHT5_SPEAKER_EMBEDDINGS_URL,
-  });
-
-  const output = result as {
-    audio: Float32Array;
-    sampling_rate: number;
-  };
-
-  self.postMessage({
-    type: "result",
-    data: {
-      audio: output.audio,
-      samplingRate: output.sampling_rate,
-    },
-  });
-}
-
 // Listen for messages from main thread
 self.addEventListener("message", async (event: MessageEvent) => {
   const { type } = event.data;
@@ -285,7 +243,7 @@ self.addEventListener("message", async (event: MessageEvent) => {
       } else if (currentModelId === OUTETTS_MODEL_ID) {
         await synthesizeWithOuteTts(text, speakerId);
       } else {
-        await synthesizeWithSpeecht5(text);
+        throw new Error("No TTS model loaded");
       }
     } catch (error) {
       self.postMessage({

@@ -7,10 +7,16 @@ export interface DepthModelOption {
 
 export const DEPTH_MODELS: DepthModelOption[] = [
   {
-    id: "depth-anything/Depth-Anything-V2-Small-hf",
+    id: "onnx-community/depth-anything-v2-small",
     label: "Depth Anything V2 Small",
-    size: "~97 MB",
+    size: "~99 MB",
     description: "Fast, accurate monocular depth estimation",
+  },
+  {
+    id: "onnx-community/depth-anything-v2-base",
+    label: "Depth Anything V2 Base",
+    size: "~389 MB",
+    description: "Higher quality depth maps, more detail",
   },
 ];
 

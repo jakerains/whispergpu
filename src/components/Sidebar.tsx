@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import {
   Waves,
-  Radio,
   MessageSquare,
   Scissors,
   ScanSearch,
@@ -13,10 +12,7 @@ import {
   Eye,
   Mountain,
   Speech,
-  Music,
-  Search,
   Shapes,
-  Languages,
   Menu,
   X,
   ChevronDown,
@@ -46,8 +42,6 @@ const NAV_CATEGORIES: NavCategory[] = [
     items: [
       { href: "/speech-to-text", label: "Speech to Text", icon: Waves },
       { href: "/text-to-speech", label: "Text to Speech", icon: Speech, status: "beta" },
-      { href: "/lfm-audio", label: "LFM Audio", icon: Radio, status: "beta" },
-      { href: "/music-generation", label: "Music Generation", icon: Music, status: "wip" },
     ],
   },
   {
@@ -56,7 +50,7 @@ const NAV_CATEGORIES: NavCategory[] = [
     items: [
       { href: "/background-removal", label: "Background Removal", icon: Scissors },
       { href: "/object-detection", label: "Object Detection", icon: ScanSearch },
-      { href: "/depth-estimation", label: "Depth Estimation", icon: Mountain, status: "wip" },
+      { href: "/depth-estimation", label: "Depth Estimation", icon: Mountain, status: "beta" },
       { href: "/image-segmentation", label: "Image Segmentation", icon: Shapes, status: "beta" },
       { href: "/vision-chat", label: "Vision Chat", icon: Eye, status: "beta" },
     ],
@@ -66,8 +60,6 @@ const NAV_CATEGORIES: NavCategory[] = [
     icon: MessageSquare,
     items: [
       { href: "/chat", label: "Chat", icon: MessageSquare },
-      { href: "/translation", label: "Translation", icon: Languages, status: "beta" },
-      { href: "/semantic-search", label: "Semantic Search", icon: Search, status: "beta" },
     ],
   },
   {

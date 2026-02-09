@@ -1,4 +1,4 @@
-export const APP_VERSION = "0.8.1";
+export const APP_VERSION = "0.9.1";
 
 export interface ChangelogEntry {
   version: string;
@@ -11,6 +11,32 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  {
+    version: "0.9.1",
+    date: "2026-02-08",
+    title: "Realtime Speech-to-Text",
+    changes: [
+      { type: "added", text: "Realtime transcription mode — live, streaming speech-to-text as you speak" },
+      { type: "added", text: "Token-by-token streaming via TextStreamer with tokens/second display" },
+      { type: "added", text: "Standard/Realtime mode toggle on the Speech to Text page" },
+      { type: "added", text: "Language selector for realtime mode (19 languages)" },
+      { type: "improved", text: "WebGPU shader warmup on model load for faster first transcription" },
+    ],
+  },
+  {
+    version: "0.9.0",
+    date: "2026-02-08",
+    title: "Feature Curation & Model Upgrades",
+    changes: [
+      { type: "changed", text: "Removed Translation, Music Generation, LFM Audio Studio, and Semantic Search (redundant or broken)" },
+      { type: "fixed", text: "Depth Estimation now uses correct ONNX model (onnx-community/depth-anything-v2-small)" },
+      { type: "added", text: "Depth Anything V2 Base model option for higher quality depth maps" },
+      { type: "added", text: "Whisper Large V3 Turbo model option for best-in-class speech recognition" },
+      { type: "changed", text: "Removed legacy SpeechT5 TTS model — LFM2.5 Audio and OuteTTS remain" },
+      { type: "changed", text: "Removed SAM1 (Xenova) from segmentation — SAM3 is the only option now" },
+      { type: "improved", text: "Streamlined from 12 features to 8 focused, working experiments" },
+    ],
+  },
   {
     version: "0.8.1",
     date: "2026-02-08",

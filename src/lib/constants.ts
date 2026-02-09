@@ -42,4 +42,10 @@ export const WHISPER_MODELS: WhisperModelOption[] = [
     size: "~74 MB",
     description: "99 languages, moderate accuracy",
   },
+  {
+    id: "onnx-community/whisper-large-v3-turbo",
+    label: "Large V3 Turbo",
+    size: "~1.5 GB",
+    description: "Best accuracy, 99 languages, optimized decoding",
+  },
 ];

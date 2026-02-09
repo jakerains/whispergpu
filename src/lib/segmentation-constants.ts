@@ -16,13 +16,6 @@ export const SEGMENTATION_MODELS: SegmentationModelOption[] = [
     dtype: "q4f16",
     modelClass: "sam3",
   },
-  {
-    id: "Xenova/sam-vit-base",
-    label: "SAM ViT Base",
-    size: "~360 MB",
-    description: "Segment Anything (original) — click to segment objects",
-    modelClass: "sam1",
-  },
 ];
 
 export const DEFAULT_SEGMENTATION_MODEL_ID = SEGMENTATION_MODELS[0].id;
