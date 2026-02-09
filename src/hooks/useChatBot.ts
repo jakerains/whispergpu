@@ -71,6 +71,7 @@ interface ChatBotState {
 
   // Actions
   handleSubmit: () => void;
+  sendMessage: (text: string) => void;
   stop: () => void;
   append: (message: Omit<ChatMessage, "id" | "createdAt">) => void;
   setMessages: (messages: ChatMessage[]) => void;
@@ -321,6 +322,47 @@ export function useChatBot(): ChatBotState {
     setStatus("idle");
   }, []);
 
+  const sendMessage = useCallback((text: string) => {
+    if (!workerRef.current || !text.trim() || isGenerating) return;
+
+    const model = CHAT_MODELS.find((m) => m.id === modelId);
+    if (!model) return;
+
+    const userMessage: ChatMessage = {
+      id: generateId(),
+      role: "user",
+      content: text.trim(),
+      createdAt: Date.now(),
+    };
+
+    const updatedMessages = [...messages, userMessage];
+    setMessages(updatedMessages);
+    setInput("");
+    setIsGenerating(true);
+    setIsThinking(false);
+    setStreamingContent("");
+    setStreamingThinking("");
+    streamBufferRef.current = "";
+    setStatus("submitted");
+
+    const workerMessages: ChatMessage[] = [
+      {
+        id: "system",
+        role: "system",
+        content: model.systemPrompt || DEFAULT_SYSTEM_PROMPT,
+        createdAt: 0,
+      },
+      ...updatedMessages,
+    ];
+
+    workerRef.current.postMessage({
+      type: "generate",
+      messages: workerMessages,
+      maxTokens: model.maxTokens,
+      generationConfig: model.generationConfig,
+    });
+  }, [isGenerating, messages, modelId]);
+
   const append = useCallback(
     (message: Omit<ChatMessage, "id" | "createdAt">) => {
       const newMessage: ChatMessage = {
@@ -351,6 +393,7 @@ export function useChatBot(): ChatBotState {
     setInput,
     status,
     handleSubmit,
+    sendMessage,
     stop,
     append,
     setMessages,

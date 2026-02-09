@@ -19,7 +19,7 @@ export default function ChatPage() {
     CHAT_MODELS.find((m) => m.id === chat.modelId) ?? CHAT_MODELS[0];
 
   const handleSuggestionClick = (text: string) => {
-    chat.setInput(text);
+    chat.sendMessage(text);
   };
 
   return (
