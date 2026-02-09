@@ -180,7 +180,7 @@ export default function LandingPage() {
                   title: "Chat",
                   description: "Conversational AI with streaming responses and thinking support. Runs local LLMs directly in your browser.",
                   icon: MessageSquare,
-                  modelSize: "570 MB-2.1 GB",
+                  modelSize: "570 MB-2.8 GB",
                   tag: "Text AI",
                 },
                 {

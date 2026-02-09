@@ -1,4 +1,4 @@
-export const APP_VERSION = "0.9.4";
+export const APP_VERSION = "0.9.5";
 
 export interface ChangelogEntry {
   version: string;
@@ -11,6 +11,20 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  {
+    version: "0.9.5",
+    date: "2026-02-08",
+    title: "TTS Overhaul + Expanded Chat Models",
+    changes: [
+      { type: "added", text: "Kitten TTS Nano — ultra-lightweight 15M param TTS with 8 expressive voices (~24 MB)" },
+      { type: "added", text: "Kokoro TTS set as default model with Sky voice — highest quality browser TTS" },
+      { type: "fixed", text: "Kokoro TTS audio corruption — switched from WebGPU to WASM backend" },
+      { type: "improved", text: "Voice selector resets to correct default when switching TTS models" },
+      { type: "changed", text: "Text to Speech promoted from WIP to Beta" },
+      { type: "added", text: "Llama 3.2 (1B), Qwen3 (1.7B), LFM2 (2.6B), Qwen3 (4B) chat models" },
+      { type: "added", text: "Switch model button in chat — change models without refreshing the page" },
+    ],
+  },
   {
     version: "0.9.4",
     date: "2026-02-08",

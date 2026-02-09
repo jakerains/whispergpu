@@ -7,6 +7,7 @@ import {
   AlertCircle,
   ChevronDown,
   HardDrive,
+  RefreshCw,
 } from "lucide-react";
 import { clsx } from "clsx";
 import { ProgressBar } from "../ProgressBar";
@@ -209,30 +210,77 @@ export function ChatModelSetup({
       )}
 
       {isModelReady && (
-        <div
-          className="flex items-center gap-3 p-4 rounded-xl"
-          style={{
-            background: "var(--success-bg)",
-            border: "1px solid var(--success-border)",
-          }}
-        >
-          <CheckCircle2
-            className="w-5 h-5"
-            style={{ color: "var(--success)" }}
-          />
-          <div>
-            <p
-              className="text-sm font-medium"
+        <div className="space-y-3">
+          <div
+            className="flex items-center gap-3 p-4 rounded-xl"
+            style={{
+              background: "var(--success-bg)",
+              border: "1px solid var(--success-border)",
+            }}
+          >
+            <CheckCircle2
+              className="w-5 h-5"
               style={{ color: "var(--success)" }}
+            />
+            <div className="flex-1">
+              <p
+                className="text-sm font-medium"
+                style={{ color: "var(--success)" }}
+              >
+                Model Ready
+              </p>
+              <p
+                className="text-xs"
+                style={{ color: "var(--success)", opacity: 0.7 }}
+              >
+                {selectedModel.label} loaded on WebGPU
+              </p>
+            </div>
+          </div>
+
+          {/* Switch Model */}
+          <div
+            className="flex items-center gap-2 p-3 rounded-xl"
+            style={{
+              background: "var(--surface)",
+              border: "1px solid var(--border-subtle)",
+            }}
+          >
+            <div className="relative flex-1">
+              <select
+                value={modelId}
+                onChange={(e) => onModelChange(e.target.value)}
+                className="w-full appearance-none px-3 py-2 pr-8 rounded-lg text-xs font-medium transition-all focus:outline-none"
+                style={{
+                  background: "var(--card)",
+                  color: "var(--foreground)",
+                  border: "1px solid var(--border-subtle)",
+                }}
+              >
+                {CHAT_MODELS.map((model) => (
+                  <option key={model.id} value={model.id}>
+                    {model.label} — {model.size}
+                    {cachedModelIds.has(model.id) ? " ✓ Cached" : ""}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 pointer-events-none"
+                style={{ color: "var(--muted-light)" }}
+              />
+            </div>
+            <button
+              onClick={onLoadModel}
+              className="shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all hover:brightness-110 active:scale-[0.97]"
+              style={{
+                background: "var(--accent)",
+                color: "#FFFFFF",
+                boxShadow: "0 2px 8px rgba(194, 114, 78, 0.3)",
+              }}
             >
-              Model Ready
-            </p>
-            <p
-              className="text-xs"
-              style={{ color: "var(--success)", opacity: 0.7 }}
-            >
-              {selectedModel.label} loaded on WebGPU
-            </p>
+              <RefreshCw className="w-3.5 h-3.5" />
+              Switch
+            </button>
           </div>
         </div>
       )}

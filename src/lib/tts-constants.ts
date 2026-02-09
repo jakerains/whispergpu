@@ -1,4 +1,4 @@
-export type TTSEngine = "kokoro" | "supertonic" | "lfm" | "outetts";
+export type TTSEngine = "kitten" | "kokoro" | "supertonic" | "lfm" | "outetts";
 
 export interface TTSModelOption {
   id: string;
@@ -21,6 +21,15 @@ export const TTS_MODELS: TTSModelOption[] = [
     ttsEngine: "kokoro",
     supportsTts: true,
     voiceProfile: "30+ voices across American & British accents",
+  },
+  {
+    id: "onnx-community/kitten-tts-nano-0.1-ONNX",
+    label: "Kitten TTS Nano",
+    size: "~24 MB",
+    description: "Ultra-lightweight 15M param TTS — loads instantly, 8 expressive voices",
+    ttsEngine: "kitten",
+    supportsTts: true,
+    voiceProfile: "4 female + 4 male expression voices",
   },
   {
     id: "onnx-community/Supertonic-TTS-2-ONNX",
@@ -53,12 +62,23 @@ export const TTS_MODELS: TTSModelOption[] = [
   },
 ];
 
+export const KITTEN_VOICES = [
+  { id: "expr-voice-2-f", label: "Voice 2 (Female)", group: "Female" },
+  { id: "expr-voice-3-f", label: "Voice 3 (Female)", group: "Female" },
+  { id: "expr-voice-4-f", label: "Voice 4 (Female)", group: "Female" },
+  { id: "expr-voice-5-f", label: "Voice 5 (Female)", group: "Female" },
+  { id: "expr-voice-2-m", label: "Voice 2 (Male)", group: "Male" },
+  { id: "expr-voice-3-m", label: "Voice 3 (Male)", group: "Male" },
+  { id: "expr-voice-4-m", label: "Voice 4 (Male)", group: "Male" },
+  { id: "expr-voice-5-m", label: "Voice 5 (Male)", group: "Male" },
+] as const;
+
 export const KOKORO_VOICES = [
   // American Female
+  { id: "af_sky", label: "Sky (American Female)", group: "American Female" },
   { id: "af_heart", label: "Heart (American Female)", group: "American Female" },
   { id: "af_bella", label: "Bella (American Female)", group: "American Female" },
   { id: "af_nova", label: "Nova (American Female)", group: "American Female" },
-  { id: "af_sky", label: "Sky (American Female)", group: "American Female" },
   { id: "af_sarah", label: "Sarah (American Female)", group: "American Female" },
   { id: "af_nicole", label: "Nicole (American Female)", group: "American Female" },
   // American Male

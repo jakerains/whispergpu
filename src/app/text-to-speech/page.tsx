@@ -19,6 +19,7 @@ import { useTextToSpeech } from "@/hooks/useTextToSpeech";
 import { useWebGPUSupport } from "@/hooks/useWebGPUSupport";
 import {
   TTS_MODELS,
+  KITTEN_VOICES,
   KOKORO_VOICES,
   SUPERTONIC_SPEAKERS,
   OUTETTS_SPEAKERS,
@@ -34,11 +35,22 @@ export default function TextToSpeechPage() {
 
   const selectedModel =
     TTS_MODELS.find((m) => m.id === tts.modelId) ?? TTS_MODELS[0];
+  const isKittenSelected = selectedModel.ttsEngine === "kitten";
   const isKokoroSelected = selectedModel.ttsEngine === "kokoro";
   const isSupertonicSelected = selectedModel.ttsEngine === "supertonic";
   const isLfmSelected = selectedModel.ttsEngine === "lfm";
   const isOuteTtsSelected = selectedModel.ttsEngine === "outetts";
-  const hasSpeakerSelect = isKokoroSelected || isSupertonicSelected || isOuteTtsSelected;
+  const hasSpeakerSelect = isKittenSelected || isKokoroSelected || isSupertonicSelected || isOuteTtsSelected;
+
+  // Reset speaker to the appropriate default when model changes
+  useEffect(() => {
+    if (isKittenSelected) tts.setSpeakerId("expr-voice-2-f");
+    else if (isKokoroSelected) tts.setSpeakerId("af_sky");
+    else if (isSupertonicSelected) tts.setSpeakerId("F1");
+    else if (isOuteTtsSelected) tts.setSpeakerId("male_1");
+    else tts.setSpeakerId("");
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tts.modelId]);
 
   const audioUrl = useMemo(() => {
     if (!tts.audioResult) return null;
@@ -216,13 +228,15 @@ export default function TextToSpeechPage() {
                   voiceProfile={selectedModel.voiceProfile}
                   supportsInterleaved={selectedModel.supportsInterleaved}
                   speakers={
-                    isKokoroSelected
-                      ? KOKORO_VOICES
-                      : isSupertonicSelected
-                        ? SUPERTONIC_SPEAKERS
-                        : isOuteTtsSelected
-                          ? OUTETTS_SPEAKERS
-                          : undefined
+                    isKittenSelected
+                      ? KITTEN_VOICES
+                      : isKokoroSelected
+                        ? KOKORO_VOICES
+                        : isSupertonicSelected
+                          ? SUPERTONIC_SPEAKERS
+                          : isOuteTtsSelected
+                            ? OUTETTS_SPEAKERS
+                            : undefined
                   }
                   selectedSpeaker={hasSpeakerSelect ? tts.speakerId : undefined}
                   onSpeakerChange={hasSpeakerSelect ? tts.setSpeakerId : undefined}

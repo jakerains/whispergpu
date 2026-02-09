@@ -1,11 +1,15 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore — onnxruntime-web types don't resolve via package.json exports
+import * as ort from "onnxruntime-web";
 import { env, pipeline } from "@huggingface/transformers";
 import { AudioModel } from "../../lib/lfm/audio-model.js";
 
 // Engine type for routing — mirrors TTSEngine from tts-constants
-type TTSEngine = "kokoro" | "supertonic" | "lfm" | "outetts";
+type TTSEngine = "kitten" | "kokoro" | "supertonic" | "lfm" | "outetts";
 
 // Constants inlined — Web Workers don't resolve path aliases
 const MODEL_ENGINE_MAP: Record<string, TTSEngine> = {
+  "onnx-community/kitten-tts-nano-0.1-ONNX": "kitten",
   "onnx-community/Kokoro-82M-v1.0-ONNX": "kokoro",
   "onnx-community/Supertonic-TTS-2-ONNX": "supertonic",
   "LiquidAI/LFM2.5-Audio-1.5B-ONNX": "lfm",
@@ -27,6 +31,13 @@ let kokoroTts: any = null;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let supertonicPipeline: any = null;
 
+// Kitten TTS state (raw ONNX Runtime inference)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let kittenSession: any = null;
+let kittenVocab: Record<string, number> = {};
+// Cache fetched voice embeddings to avoid re-downloading
+const kittenVoiceCache: Record<string, Float32Array> = {};
+
 let currentModelId: string | null = null;
 let currentEngine: TTSEngine | null = null;
 
@@ -38,6 +49,8 @@ function disposeCurrentModel() {
   outeTtsInterface = null;
   kokoroTts = null;
   supertonicPipeline = null;
+  kittenSession = null;
+  kittenVocab = {};
   currentModelId = null;
   currentEngine = null;
 }
@@ -56,14 +69,104 @@ function postProgress(file: string, progress: number, status: "initiate" | "prog
   });
 }
 
+// ─── Kitten TTS (raw ONNX Runtime — style_text_to_speech_2) ──
+
+async function loadKittenModel(modelId: string) {
+  // Use WASM backend (tiny model, fast on CPU, avoids WebGPU precision issues)
+  ort.env.wasm.numThreads = 1;
+
+  postProgress("kitten-model", 0, "initiate");
+
+  // Fetch the quantized ONNX model from HuggingFace
+  const modelUrl = `https://huggingface.co/${modelId}/resolve/main/onnx/model_quantized.onnx`;
+  const modelResponse = await fetch(modelUrl);
+  if (!modelResponse.ok) throw new Error(`Failed to download model: ${modelResponse.statusText}`);
+  const modelBuffer = await modelResponse.arrayBuffer();
+
+  postProgress("kitten-model", 50, "progress");
+
+  // Create ONNX inference session
+  kittenSession = await ort.InferenceSession.create(modelBuffer, {
+    executionProviders: ["wasm"],
+  });
+
+  postProgress("kitten-model", 70, "progress");
+
+  // Load tokenizer vocab from HuggingFace
+  const tokenizerUrl = `https://huggingface.co/${modelId}/resolve/main/tokenizer.json`;
+  const tokenizerResponse = await fetch(tokenizerUrl);
+  if (!tokenizerResponse.ok) throw new Error(`Failed to download tokenizer: ${tokenizerResponse.statusText}`);
+  const tokenizerData = await tokenizerResponse.json();
+  kittenVocab = tokenizerData.model?.vocab ?? {};
+
+  postProgress("kitten-model", 100, "done");
+
+  currentModelId = modelId;
+  currentEngine = "kitten";
+}
+
+async function synthesizeWithKitten(text: string, voiceId?: string) {
+  if (!kittenSession) {
+    throw new Error("Kitten TTS model not loaded");
+  }
+
+  const { phonemize } = await import("phonemizer");
+
+  // 1. Convert text to phonemes
+  const phonemes = await phonemize(text, "en-us");
+
+  // 2. Tokenize: wrap in $ delimiters, map each char to vocab ID
+  const tokenChars = `$${phonemes}$`.split("");
+  const tokenIds = tokenChars.map((char) => {
+    const id = kittenVocab[char];
+    return id !== undefined ? id : 0; // fallback to pad token
+  });
+
+  // 3. Load voice embedding (cached)
+  const speaker = voiceId || "expr-voice-2-f";
+  if (!kittenVoiceCache[speaker]) {
+    const voiceUrl = `https://huggingface.co/${currentModelId}/resolve/main/voices/${speaker}.bin`;
+    const voiceResponse = await fetch(voiceUrl);
+    if (!voiceResponse.ok) throw new Error(`Failed to download voice: ${speaker}`);
+    const voiceBuffer = await voiceResponse.arrayBuffer();
+    kittenVoiceCache[speaker] = new Float32Array(voiceBuffer);
+  }
+
+  const voiceData = kittenVoiceCache[speaker];
+
+  // Voice data is shape [num_steps, 256] — select style vector based on token count
+  const numSteps = voiceData.length / 256;
+  const styleIndex = Math.min(tokenIds.length, numSteps - 1);
+  const styleVector = voiceData.slice(styleIndex * 256, (styleIndex + 1) * 256);
+
+  // 4. Create ONNX tensors
+  const inputIds = new BigInt64Array(tokenIds.map((id) => BigInt(id)));
+
+  const inputs = {
+    input_ids: new ort.Tensor("int64", inputIds, [1, inputIds.length]),
+    style: new ort.Tensor("float32", styleVector, [1, 256]),
+    speed: new ort.Tensor("float32", new Float32Array([1.0]), [1]),
+  };
+
+  // 5. Run inference
+  const results = await kittenSession.run(inputs);
+  const audioOutput = results.waveform;
+  const audioData = new Float32Array(audioOutput.data as Float32Array);
+
+  self.postMessage({
+    type: "result",
+    data: { audio: audioData, samplingRate: 24000 },
+  });
+}
+
 // ─── Kokoro TTS ───────────────────────────────────────────────
 
 async function loadKokoroModel(modelId: string) {
   const { KokoroTTS } = await import("kokoro-js");
 
+  // Use WASM — WebGPU produces corrupted audio (transformers.js #1320, fix in v4)
   const tts = await KokoroTTS.from_pretrained(modelId, {
     dtype: "q8",
-    device: "webgpu",
     progress_callback: (progressData: unknown) => {
       const data = progressData as {
         file?: string;
@@ -91,7 +194,7 @@ async function synthesizeWithKokoro(text: string, voiceId?: string) {
   }
 
   const result = await kokoroTts.generate(text, {
-    voice: voiceId || "af_heart",
+    voice: voiceId || "af_sky",
   });
 
   // kokoro-js returns { audio: Float32Array, sampling_rate: number }
@@ -300,6 +403,9 @@ async function loadModel(modelId: string) {
   }
 
   switch (engine) {
+    case "kitten":
+      await loadKittenModel(modelId);
+      break;
     case "kokoro":
       await loadKokoroModel(modelId);
       break;
@@ -342,6 +448,9 @@ self.addEventListener("message", async (event: MessageEvent) => {
     const { text, speakerId } = event.data;
     try {
       switch (currentEngine) {
+        case "kitten":
+          await synthesizeWithKitten(text, speakerId);
+          break;
         case "kokoro":
           await synthesizeWithKokoro(text, speakerId);
           break;
