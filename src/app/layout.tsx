@@ -7,6 +7,7 @@ import {
   GeistPixelTriangle,
   GeistPixelLine,
 } from "geist/font/pixel";
+import { Analytics } from "@vercel/analytics/next";
 import { Sidebar } from "@/components/Sidebar";
 import "./globals.css";
 
@@ -76,6 +77,7 @@ export default function RootLayout({
         <div className="lg:ml-[260px] pt-14 lg:pt-0">
           {children}
         </div>
+        <Analytics />
       </body>
     </html>
   );
