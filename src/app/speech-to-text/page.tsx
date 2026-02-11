@@ -5,13 +5,15 @@ import { Header } from "@/components/Header";
 import { ModelSetup } from "@/components/ModelSetup";
 import { TranscriptionPanel } from "@/components/TranscriptionPanel";
 import { RealtimeTranscription } from "@/components/RealtimeTranscription";
+import { ParakeetTranscription } from "@/components/ParakeetTranscription";
 import { useTranscriber } from "@/hooks/useTranscriber";
 import { useAudioRecorder } from "@/hooks/useAudioRecorder";
 import { useRealtimeTranscriber } from "@/hooks/useRealtimeTranscriber";
+import { useParakeetTranscriber } from "@/hooks/useParakeetTranscriber";
 import { useWebGPUSupport } from "@/hooks/useWebGPUSupport";
-import { Mic, Radio } from "lucide-react";
+import { Mic, Radio, AudioWaveform } from "lucide-react";
 
-type STTMode = "standard" | "realtime";
+type STTMode = "standard" | "realtime" | "parakeet";
 
 export default function SpeechToTextPage() {
   const { isSupported: isWebGPUSupported, isChecking: isCheckingWebGPU } =
@@ -22,11 +24,13 @@ export default function SpeechToTextPage() {
   const transcriber = useTranscriber();
   const recorder = useAudioRecorder();
   const realtime = useRealtimeTranscriber();
+  const parakeet = useParakeetTranscriber();
 
   // Auto-set device based on WebGPU support
   useEffect(() => {
     if (!isCheckingWebGPU && !isWebGPUSupported) {
       transcriber.setDevice("wasm");
+      parakeet.setBackend("wasm");
     }
   }, [isCheckingWebGPU, isWebGPUSupported]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -37,7 +41,11 @@ export default function SpeechToTextPage() {
   const handleStopRecording = async () => {
     const audio = await recorder.stopRecording();
     if (audio) {
-      transcriber.transcribe(audio);
+      if (mode === "parakeet") {
+        parakeet.transcribe(audio);
+      } else {
+        transcriber.transcribe(audio);
+      }
     }
   };
 
@@ -61,7 +69,7 @@ export default function SpeechToTextPage() {
             }}
           >
             <Mic className="w-4 h-4" />
-            Standard
+            Whisper
           </button>
           <button
             onClick={() => setMode("realtime")}
@@ -73,7 +81,19 @@ export default function SpeechToTextPage() {
             }}
           >
             <Radio className="w-4 h-4" />
-            Realtime
+            Whisper Live
+          </button>
+          <button
+            onClick={() => setMode("parakeet")}
+            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all"
+            style={{
+              background: mode === "parakeet" ? "var(--accent-bg)" : "transparent",
+              color: mode === "parakeet" ? "var(--accent)" : "var(--muted)",
+              border: mode === "parakeet" ? "1px solid var(--accent-border)" : "1px solid transparent",
+            }}
+          >
+            <AudioWaveform className="w-4 h-4" />
+            Parakeet
           </button>
         </div>
 
@@ -112,12 +132,28 @@ export default function SpeechToTextPage() {
           <RealtimeTranscription rt={realtime} />
         )}
 
+        {/* Parakeet Mode */}
+        {mode === "parakeet" && (
+          <ParakeetTranscription
+            pk={parakeet}
+            isWebGPUSupported={isWebGPUSupported}
+            isRecording={recorder.isRecording}
+            duration={recorder.duration}
+            audioError={recorder.error}
+            analyserNode={recorder.analyserNode}
+            onStartRecording={handleStartRecording}
+            onStopRecording={handleStopRecording}
+          />
+        )}
+
         <footer className="mt-10 text-center">
-          <div className="inline-flex items-center gap-1.5 text-xs" style={{ color: "var(--muted)" }}>
+          <div className="inline-flex items-center gap-1.5 text-xs flex-wrap justify-center" style={{ color: "var(--muted)" }}>
             <span>Powered by</span>
             <span className="font-medium" style={{ color: "var(--foreground)" }}>Transformers.js</span>
             <span>&</span>
             <span className="font-medium" style={{ color: "var(--foreground)" }}>Whisper</span>
+            <span>&</span>
+            <span className="font-medium" style={{ color: "var(--foreground)" }}>Parakeet.js</span>
           </div>
           <p className="text-xs mt-1" style={{ color: "var(--muted-light)" }}>
             All processing happens locally in your browser

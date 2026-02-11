@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { Settings, Trash2, HardDrive, AlertTriangle } from "lucide-react";
-import { clearAllModelCache, estimateCacheSize, getCachedModelIds } from "@/lib/model-cache";
+import { clearAllModelCache, estimateCacheSize, getCachedModelIds, getCachedParakeetModelIds, clearParakeetCache } from "@/lib/model-cache";
 import { WHISPER_MODELS } from "@/lib/constants";
 import { BG_REMOVAL_MODELS } from "@/lib/bg-removal-constants";
 import { DETECTION_MODELS } from "@/lib/detection-constants";
@@ -11,6 +11,7 @@ import { SEGMENTATION_MODELS } from "@/lib/segmentation-constants";
 import { TTS_MODELS } from "@/lib/tts-constants";
 import { CHAT_MODELS } from "@/lib/chat-constants";
 import { AUDIO_INTELLIGENCE_MODELS } from "@/lib/audio-intelligence-constants";
+import { PARAKEET_MODELS } from "@/lib/parakeet-constants";
 
 interface ModelInfo {
   id: string;
@@ -20,10 +21,12 @@ interface ModelInfo {
 }
 
 // Collect all models from every feature
+// Parakeet models use `key` as their identifier (not HF model IDs like the others)
 const ALL_MODELS: ModelInfo[] = [
   ...CHAT_MODELS.map((m) => ({ id: m.id, label: m.label, size: m.size, category: "Chat" })),
   ...AUDIO_INTELLIGENCE_MODELS.map((m) => ({ id: m.id, label: m.label, size: m.size, category: "Audio Intelligence" })),
-  ...WHISPER_MODELS.map((m) => ({ id: m.id, label: m.label, size: m.size, category: "Speech to Text" })),
+  ...WHISPER_MODELS.map((m) => ({ id: m.id, label: m.label, size: m.size, category: "Speech to Text (Whisper)" })),
+  ...PARAKEET_MODELS.map((m) => ({ id: m.repoId, label: m.label, size: m.size, category: "Speech to Text (Parakeet)" })),
   ...TTS_MODELS.map((m) => ({ id: m.id, label: m.label, size: m.size, category: "Text to Speech" })),
   ...BG_REMOVAL_MODELS.map((m) => ({ id: m.id, label: m.label, size: m.size, category: "Background Removal" })),
   ...DETECTION_MODELS.map((m) => ({ id: m.id, label: m.label, size: m.size, category: "Object Detection" })),
@@ -46,7 +49,14 @@ export default function SettingsPage() {
 
   const refreshStatus = useCallback(async () => {
     const ids = ALL_MODELS.map((m) => m.id);
+    // Check Cache API (transformers.js models)
     const cached = await getCachedModelIds(ids);
+    // Check IndexedDB (parakeet.js models)
+    const parakeetRepoIds = PARAKEET_MODELS.map((m) => m.repoId);
+    const cachedParakeet = await getCachedParakeetModelIds(parakeetRepoIds);
+    for (const repoId of cachedParakeet) {
+      cached.add(repoId);
+    }
     setCachedIds(cached);
     const size = await estimateCacheSize();
     setCacheSize(size);
@@ -58,7 +68,7 @@ export default function SettingsPage() {
 
   const handleClearAll = async () => {
     setIsClearing(true);
-    await clearAllModelCache();
+    await Promise.all([clearAllModelCache(), clearParakeetCache()]);
     setCachedIds(new Set());
     const size = await estimateCacheSize();
     setCacheSize(size);

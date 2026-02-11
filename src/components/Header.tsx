@@ -21,11 +21,11 @@ export function Header({ isWebGPUSupported, isCheckingWebGPU }: HeaderProps) {
           className="text-3xl sm:text-4xl font-bold tracking-tight"
           style={{ fontFamily: "var(--font-display)", color: "var(--foreground)" }}
         >
-          Whisper WebGPU
+          Speech to Text
         </h1>
       </div>
       <p className="text-sm mb-4 max-w-md mx-auto leading-relaxed" style={{ color: "var(--muted)" }}>
-        Real-time speech-to-text powered by OpenAI Whisper — running entirely in your browser
+        Speech recognition powered by Whisper &amp; Parakeet — running entirely in your browser
       </p>
       <div className="flex items-center justify-center gap-2">
         {isCheckingWebGPU ? (

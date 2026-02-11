@@ -1,4 +1,4 @@
-export const APP_VERSION = "0.10.1";
+export const APP_VERSION = "0.11.0";
 
 export interface ChangelogEntry {
   version: string;
@@ -11,6 +11,19 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  {
+    version: "0.11.0",
+    date: "2026-02-11",
+    title: "Parakeet.js Speech-to-Text Engine",
+    changes: [
+      { type: "added", text: "NVIDIA Parakeet TDT speech recognition — new engine option in Speech-to-Text" },
+      { type: "added", text: "Parakeet TDT v2 (English) and v3 (13 languages) model options via parakeet.js" },
+      { type: "added", text: "Realtime streaming transcription with StatefulStreamingTranscriber" },
+      { type: "added", text: "Word-level timestamps with per-word confidence scores" },
+      { type: "added", text: "Performance metrics display — RTF, encode/decode timing breakdown" },
+      { type: "added", text: "Record & Transcribe / Realtime sub-mode toggle within Parakeet tab" },
+    ],
+  },
   {
     version: "0.10.1",
     date: "2026-02-10",

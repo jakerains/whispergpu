@@ -61,3 +61,84 @@ export async function estimateCacheSize(): Promise<number> {
     return 0;
   }
 }
+
+// ─── Parakeet.js cache (IndexedDB) ──────────────────────────────────
+// parakeet.js stores model files in IndexedDB "parakeet-cache-db" / "file-store"
+// with keys like "hf-{repoId}-main--{filename}".
+
+const PARAKEET_DB = "parakeet-cache-db";
+const PARAKEET_STORE = "file-store";
+
+function openParakeetDb(): Promise<IDBDatabase | null> {
+  if (typeof indexedDB === "undefined") return Promise.resolve(null);
+  return new Promise((resolve) => {
+    try {
+      const req = indexedDB.open(PARAKEET_DB, 1);
+      req.onerror = () => resolve(null);
+      req.onsuccess = () => resolve(req.result);
+      req.onupgradeneeded = (event) => {
+        const db = (event.target as IDBOpenDBRequest).result;
+        if (!db.objectStoreNames.contains(PARAKEET_STORE)) {
+          db.createObjectStore(PARAKEET_STORE);
+        }
+      };
+    } catch {
+      resolve(null);
+    }
+  });
+}
+
+/**
+ * Checks whether a parakeet model is cached in IndexedDB.
+ * Probes for vocab.txt which is always downloaded.
+ */
+export async function isParakeetModelCached(repoId: string): Promise<boolean> {
+  const db = await openParakeetDb();
+  if (!db) return false;
+
+  const key = `hf-${repoId}-main--vocab.txt`;
+  return new Promise((resolve) => {
+    try {
+      const tx = db.transaction([PARAKEET_STORE], "readonly");
+      const store = tx.objectStore(PARAKEET_STORE);
+      const req = store.count(key);
+      req.onsuccess = () => resolve(req.result > 0);
+      req.onerror = () => resolve(false);
+    } catch {
+      resolve(false);
+    }
+  });
+}
+
+/**
+ * Checks cache status for multiple parakeet models.
+ * Returns a Set of repoIds that are cached.
+ */
+export async function getCachedParakeetModelIds(
+  repoIds: string[]
+): Promise<Set<string>> {
+  const cached = new Set<string>();
+  const checks = repoIds.map(async (id) => {
+    if (await isParakeetModelCached(id)) {
+      cached.add(id);
+    }
+  });
+  await Promise.all(checks);
+  return cached;
+}
+
+/**
+ * Deletes the parakeet.js IndexedDB cache entirely.
+ */
+export async function clearParakeetCache(): Promise<void> {
+  if (typeof indexedDB === "undefined") return;
+  return new Promise((resolve) => {
+    try {
+      const req = indexedDB.deleteDatabase(PARAKEET_DB);
+      req.onsuccess = () => resolve();
+      req.onerror = () => resolve();
+    } catch {
+      resolve();
+    }
+  });
+}

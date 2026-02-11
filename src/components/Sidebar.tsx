@@ -44,7 +44,7 @@ const NAV_CATEGORIES: NavCategory[] = [
     items: [
       { href: "/speech-to-text", label: "Speech to Text", icon: Waves },
       { href: "/text-to-speech", label: "Text to Speech", icon: Speech, status: "beta" },
-      { href: "/audio-intelligence", label: "Audio Intelligence", icon: AudioLines, status: "beta" },
+      { href: "/audio-intelligence", label: "Audio Intelligence", icon: AudioLines, status: "wip" },
     ],
   },
   {

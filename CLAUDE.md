@@ -79,7 +79,8 @@ Each WebGPU experiment's current tested status. Update this list as features are
 | Route | Feature | Status | Notes |
 |---|---|---|---|
 | `/chat` | WebGPU Chat (LLMs) | ✅ Working | Qwen3, LFM 2.5, SmolLM3 |
-| `/speech-to-text` | Whisper Speech-to-Text | ✅ Working | Added Large V3 Turbo option |
+| `/speech-to-text` | Speech to Text (Whisper + Parakeet) | ✅ Working | Whisper, Whisper Live, Parakeet (standard + realtime) |
+| `/audio-intelligence` | Audio Intelligence (Voxtral) | ⚠️ Partial (needs fixes) | WIP — Voxtral Mini 3B |
 | `/background-removal` | RMBG Background Removal | ✅ Working | |
 | `/object-detection` | YOLOS/DETR Object Detection | ✅ Working | |
 | `/depth-estimation` | Depth Anything V2 | 🔘 Untested | Fixed: now uses ONNX model |
